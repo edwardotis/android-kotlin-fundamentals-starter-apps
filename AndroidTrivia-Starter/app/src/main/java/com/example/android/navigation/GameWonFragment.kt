@@ -32,9 +32,9 @@ class GameWonFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding: FragmentGameWonBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_game_won, container, false)
-        binding.nextMatchButton.setOnClickListener({view : View ->
+        binding.nextMatchButton.setOnClickListener { view : View ->
             view.findNavController().navigate(R.id.action_gameWonFragment_to_gameFragment)
-        })
+        }
         return binding.root
     }
 }
