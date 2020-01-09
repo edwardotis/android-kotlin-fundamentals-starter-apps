@@ -46,7 +46,8 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left"
-            app:popUpTo="@+id/title_destination" />
+            app:popUpTo="@+id/title_destination"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/score_destination"
@@ -63,7 +64,6 @@
             app:popUpTo="@+id/title_destination" />
         <argument
             android:name="score"
-            android:defaultValue="0"
             app:argType="integer" />
     </fragment>
 </navigation>
