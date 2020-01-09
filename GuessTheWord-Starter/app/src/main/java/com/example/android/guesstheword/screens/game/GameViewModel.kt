@@ -7,6 +7,11 @@ import timber.log.Timber
 
 class GameViewModel : ViewModel() {
 
+    //event which triggers end of the game
+    private val _eventGameFinished = MutableLiveData<Boolean>()
+    val eventGameFinished: LiveData<Boolean>
+        get() = _eventGameFinished
+
     // The current word
     private val _word = MutableLiveData<String>()
     val word: LiveData<String>
@@ -28,6 +33,7 @@ class GameViewModel : ViewModel() {
     init {
         _word.value = ""
         _score.value = 0
+        _eventGameFinished.value = false
         resetList()
         nextWord()
         Timber.i("GameViewModel created!")
@@ -40,9 +46,18 @@ class GameViewModel : ViewModel() {
         if (!wordList.isEmpty()) {
             //Select and remove a _word from the list
             _word.value = wordList.removeAt(0)
+        }else{
+            endGame()
         }
     }
 
+    private fun endGame(){
+        //game over man
+        _eventGameFinished.value = true
+    }
+    fun onGameFinishComplete(){
+        _eventGameFinished.value = false
+    }
 
     /**
      * Resets the list of words and randomizes the order

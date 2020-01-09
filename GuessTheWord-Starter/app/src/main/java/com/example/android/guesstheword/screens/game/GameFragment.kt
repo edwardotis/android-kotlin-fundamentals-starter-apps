@@ -48,6 +48,9 @@ class GameFragment : Fragment() {
         viewModel.word.observe(this, Observer { newWord ->
             binding.wordText.text = newWord
         })
+        viewModel.eventGameFinished.observe(this, Observer { isFinished ->
+            if(isFinished) onEndGame()//single line if conditional
+        })
         // Inflate view and obtain an instance of the binding class
         binding = DataBindingUtil.inflate(
                 inflater,
@@ -68,12 +71,13 @@ class GameFragment : Fragment() {
 
     private fun onEndGame(){
         Toast.makeText(activity, "Game has just finished", Toast.LENGTH_SHORT).show()
+        viewModel.onGameFinishComplete()
         val action = GameFragmentDirections.actionGameToScore()
         //score gets a default value in viewModel init block, so always safe.
         action.score = viewModel.score.value ?: 0//or we just handle a default here as well
         NavHostFragment.findNavController(this).navigate(action)
         // Ed WARNING: If default value is set for arg, then you have to turn a one liner into a 3 line statment
-        // in order to provide args, but that data probably belongs in ViewModel anyway?
+        // in order to provide args, but that data maybe belongs in ViewModel anyway? Share b/t frags or no?
 //        findNavController().navigate(GameFragmentDirections.actionGameToScore(viewModel.score))
     }
 
