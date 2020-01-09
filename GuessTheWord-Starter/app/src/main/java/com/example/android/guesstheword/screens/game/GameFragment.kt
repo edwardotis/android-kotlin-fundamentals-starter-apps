@@ -36,7 +36,6 @@ import timber.log.Timber
 class GameFragment : Fragment() {
 
     private lateinit var binding: GameFragmentBinding
-
     private lateinit var viewModel: GameViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -65,7 +64,8 @@ class GameFragment : Fragment() {
     private fun onEndGame(){
         Toast.makeText(activity, "Game has just finished", Toast.LENGTH_SHORT).show()
         val action = GameFragmentDirections.actionGameToScore()
-        action.score = viewModel.score
+        //score gets a default value in viewModel init block, so always safe.
+        action.score = viewModel.score.value ?: 0//or we just handle a default here as well
         NavHostFragment.findNavController(this).navigate(action)
         // Ed WARNING: If default value is set for arg, then you have to turn a one liner into a 3 line statment
         // in order to provide args, but that data probably belongs in ViewModel anyway?
@@ -90,10 +90,10 @@ class GameFragment : Fragment() {
     /** Methods for updating the UI **/
 
     private fun updateWordText() {
-        binding.wordText.text = viewModel.word
+        binding.wordText.text = viewModel.word.value
     }
 
     private fun updateScoreText() {
-        binding.scoreText.text = viewModel.score.toString()
+        binding.scoreText.text = viewModel.score.value.toString()
     }
 }
