@@ -57,9 +57,15 @@ class ScoreFragment : Fragment() {
             binding.scoreText.text = finalScore.toString()
         })
 
-        binding.playAgainButton.setOnClickListener{
-            findNavController().navigate(ScoreFragmentDirections.actionRestart())
-        }
+        // Navigates back to game when button is pressed
+        viewModel.eventPlayAgain.observe(this, Observer { playAgain ->
+            if (playAgain) {
+                findNavController().navigate(ScoreFragmentDirections.actionRestart())
+                viewModel.onPlayAgainComplete()
+            }
+        })
+
+        binding.scoreViewModel = viewModel
 
         return binding.root
     }

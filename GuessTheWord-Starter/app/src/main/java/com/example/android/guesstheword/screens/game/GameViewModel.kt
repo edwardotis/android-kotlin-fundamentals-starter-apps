@@ -47,14 +47,16 @@ class GameViewModel : ViewModel() {
             //Select and remove a _word from the list
             _word.value = wordList.removeAt(0)
         }else{
-            endGame()
+            onGameFinish()
         }
     }
 
-    private fun endGame(){
+    fun onGameFinish(){
         //game over man
         _eventGameFinished.value = true
+
     }
+
     fun onGameFinishComplete(){
         _eventGameFinished.value = false
     }

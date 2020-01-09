@@ -49,7 +49,7 @@ class GameFragment : Fragment() {
             binding.wordText.text = newWord
         })
         viewModel.eventGameFinished.observe(this, Observer { isFinished ->
-            if(isFinished) onEndGame()//single line if conditional
+            if(isFinished) gameFinished()//single line if conditional
         })
         // Inflate view and obtain an instance of the binding class
         binding = DataBindingUtil.inflate(
@@ -59,19 +59,22 @@ class GameFragment : Fragment() {
                 false
         )
 
-        binding.correctButton.setOnClickListener { onCorrect() }
-        binding.skipButton.setOnClickListener { onSkip() }
-        binding.endGameButton.setOnClickListener{
-            onEndGame()
-        }
+        // Set the viewmodel for databinding - this allows the bound layout access
+        // to all the data in the ViewModel
+        binding.gameViewModel = viewModel
+
+//        binding.correctButton.setOnClickListener { onCorrect() }
+//        binding.skipButton.setOnClickListener { onSkip() }
+//        binding.endGameButton.setOnClickListener{
+//            onEndGame()
+//        }
 //        updateScoreText()
 //        updateWordText()
         return binding.root
     }
 
-    private fun onEndGame(){
+    private fun gameFinished(){
         Toast.makeText(activity, "Game has just finished", Toast.LENGTH_SHORT).show()
-        viewModel.onGameFinishComplete()
         val action = GameFragmentDirections.actionGameToScore()
         //score gets a default value in viewModel init block, so always safe.
         action.score = viewModel.score.value ?: 0//or we just handle a default here as well
@@ -79,21 +82,27 @@ class GameFragment : Fragment() {
         // Ed WARNING: If default value is set for arg, then you have to turn a one liner into a 3 line statment
         // in order to provide args, but that data maybe belongs in ViewModel anyway? Share b/t frags or no?
 //        findNavController().navigate(GameFragmentDirections.actionGameToScore(viewModel.score))
+        viewModel.onGameFinishComplete()
+
     }
+
 
     /** Methods for buttons presses **/
-
-    private fun onSkip() {
-        viewModel.onSkip()
-//        updateWordText()
-//        updateScoreText()
+    private fun onEndGame(){
+        gameFinished()
     }
 
-    private fun onCorrect() {
-        viewModel.onCorrect()
-//        updateWordText()
-//        updateScoreText()
-    }
+//    private fun onSkip() {
+//        viewModel.onSkip()
+////        updateWordText()
+////        updateScoreText()
+//    }
+//
+//    private fun onCorrect() {
+//        viewModel.onCorrect()
+////        updateWordText()
+////        updateScoreText()
+//    }
 
 
     /** Methods for updating the UI **/
