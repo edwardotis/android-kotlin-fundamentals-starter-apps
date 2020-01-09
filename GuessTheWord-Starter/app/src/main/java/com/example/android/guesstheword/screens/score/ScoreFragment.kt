@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.android.guesstheword.R
 import com.example.android.guesstheword.databinding.ScoreFragmentBinding
@@ -55,6 +56,10 @@ class ScoreFragment : Fragment() {
         viewModel.score.observe(this, Observer {finalScore ->
             binding.scoreText.text = finalScore.toString()
         })
+
+        binding.playAgainButton.setOnClickListener{
+            findNavController().navigate(ScoreFragmentDirections.actionRestart())
+        }
 
         return binding.root
     }
