@@ -47,7 +47,10 @@
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left"
             app:popUpTo="@+id/title_destination"
-            app:popUpToInclusive="false" />
+            app:popUpToInclusive="false" >
+            <argument android:defaultValue="0"
+                android:name="score" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/score_destination"

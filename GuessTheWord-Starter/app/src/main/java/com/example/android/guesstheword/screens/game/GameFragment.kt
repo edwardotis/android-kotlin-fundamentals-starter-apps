@@ -20,13 +20,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.example.android.guesstheword.R
 import com.example.android.guesstheword.databinding.GameFragmentBinding
-import com.example.android.guesstheword.screens.title.TitleFragmentDirections
 import timber.log.Timber
 
 /**
@@ -54,12 +55,21 @@ class GameFragment : Fragment() {
         binding.correctButton.setOnClickListener { onCorrect() }
         binding.skipButton.setOnClickListener { onSkip() }
         binding.endGameButton.setOnClickListener{
-            findNavController().navigate(GameFragmentDirections.actionGameToScore(viewModel.score))
+            onEndGame()
         }
         updateScoreText()
         updateWordText()
         return binding.root
+    }
 
+    private fun onEndGame(){
+        Toast.makeText(activity, "Game has just finished", Toast.LENGTH_SHORT).show()
+        val action = GameFragmentDirections.actionGameToScore()
+        action.score = viewModel.score
+        NavHostFragment.findNavController(this).navigate(action)
+        // Ed WARNING: If default value is set for arg, then you have to turn a one liner into a 3 line statment
+        // in order to provide args, but that data probably belongs in ViewModel anyway?
+//        findNavController().navigate(GameFragmentDirections.actionGameToScore(viewModel.score))
     }
 
     /** Methods for buttons presses **/
