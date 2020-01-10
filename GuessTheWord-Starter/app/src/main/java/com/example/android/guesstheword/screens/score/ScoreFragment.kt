@@ -53,9 +53,9 @@ class ScoreFragment : Fragment() {
         viewModel = viewModelFactory.create(ScoreViewModel::class.java)
 //        val args = ScoreFragmentArgs.fromBundle(arguments!!)
 //        binding.scoreText.text = viewModel.score.toString()
-        viewModel.score.observe(this, Observer {finalScore ->
-            binding.scoreText.text = finalScore.toString()
-        })
+//        viewModel.score.observe(this, Observer {finalScore ->
+//            binding.scoreText.text = finalScore.toString()
+//        })
 
         // Navigates back to game when button is pressed
         viewModel.eventPlayAgain.observe(this, Observer { playAgain ->
@@ -66,6 +66,9 @@ class ScoreFragment : Fragment() {
         })
 
         binding.scoreViewModel = viewModel
+        // Specify the current activity as the lifecycle owner of the binding.
+// This is used so that the binding can observe LiveData updates
+        binding.lifecycleOwner = this
 
         return binding.root
     }

@@ -47,8 +47,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
 
+<!-- or @{String.valueOf(scoreViewModel.score)}" might be more null safe? -->
         <TextView
             android:id="@+id/score_text"
+            android:text="@{scoreViewModel.score.toString()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
