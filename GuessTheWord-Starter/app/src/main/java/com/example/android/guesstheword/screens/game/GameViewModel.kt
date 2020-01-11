@@ -45,6 +45,11 @@ class GameViewModel : ViewModel() {
         DateUtils.formatElapsedTime(time)
     }
 
+    val hint = Transformations.map(word){ selectedWord ->
+        "The current word has ${selectedWord.length} letters. " +
+                "\n And the first letter is ${selectedWord.get(0)}"
+    }
+
     private val timer: CountDownTimer
 
 
