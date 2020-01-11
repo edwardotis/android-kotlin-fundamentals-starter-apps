@@ -66,14 +66,6 @@ class GameFragment : Fragment() {
         // Specify the current activity as the lifecycle owner of the binding.
 // This is used so that the binding can observe LiveData updates
         binding.lifecycleOwner = this
-
-//        binding.correctButton.setOnClickListener { onCorrect() }
-//        binding.skipButton.setOnClickListener { onSkip() }
-//        binding.endGameButton.setOnClickListener{
-//            onEndGame()
-//        }
-//        updateScoreText()
-//        updateWordText()
         return binding.root
     }
 
