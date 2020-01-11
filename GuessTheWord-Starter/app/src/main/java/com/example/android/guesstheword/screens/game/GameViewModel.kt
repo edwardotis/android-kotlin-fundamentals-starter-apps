@@ -1,8 +1,10 @@
 package com.example.android.guesstheword.screens.game
 
 import android.os.CountDownTimer
+import android.text.format.DateUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import timber.log.Timber
 
@@ -27,10 +29,21 @@ class GameViewModel : ViewModel() {
         //kotlin backing property
         get() = _score
 
-    private val _timeLeft = MutableLiveData<Int>()
-    val timeLeft: LiveData<Int>
+    private val _timeLeft = MutableLiveData<Long>()
+    val timeLeft: LiveData<Long>
         //kotlin backing property
         get() = _timeLeft
+
+    //INSTEAD OF THIS
+//    private val _timeLeftStr = MutableLiveData<String>()
+//    val timeLeftStr: LiveData<String>
+//        //kotlin backing property
+//        get() = _timeLeftStr
+
+    //WE USE Transformations.map to convert one LiveData object to another.
+    val timeLeftStr = Transformations.map(timeLeft){ time ->
+        DateUtils.formatElapsedTime(time)
+    }
 
     private val timer: CountDownTimer
 
@@ -50,7 +63,7 @@ class GameViewModel : ViewModel() {
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                _timeLeft.value = (millisUntilFinished /ONE_SECOND).toInt()
+                _timeLeft.value = (millisUntilFinished /ONE_SECOND)
                 Timber.i(_timeLeft.value.toString())
             }
 

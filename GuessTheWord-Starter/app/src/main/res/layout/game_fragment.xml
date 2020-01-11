@@ -65,10 +65,12 @@
             app:layout_constraintTop_toBottomOf="@+id/word_is_text"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="&quot;Tuna&quot;" />
-<!--TODO format this string to 0:00 style-->
+
+<!--                    android:text="@{@string/timer_format(gameViewModel.timeLeft)}"
+-->
         <TextView
             android:id="@+id/timer_text"
-            android:text="@{@string/timer_format(gameViewModel.timeLeft)}"
+            android:text="@{gameViewModel.timeLeftStr}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
