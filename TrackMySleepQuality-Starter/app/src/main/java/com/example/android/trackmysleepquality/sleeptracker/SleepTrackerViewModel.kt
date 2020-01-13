@@ -19,6 +19,7 @@ package com.example.android.trackmysleepquality.sleeptracker
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
+import timber.log.Timber
 
 /**
  * ViewModel for SleepTrackerFragment.
@@ -26,5 +27,32 @@ import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 class SleepTrackerViewModel(
         val database: SleepDatabaseDao,
         application: Application) : AndroidViewModel(application) {
+
+    /**
+     * Create and Save a SleepNight into dao.
+     * Deactivate start button. (Let's see their recommendation)
+     * Activate stop button
+     *
+     * Activate clear button yet? Guess so.
+     */
+    fun onStart() {
+        Timber.i("onStart Called")
+//        val night = SleepNight()
+        //ah, no let dao handle the creation.
+        //TODO database create night
+        //TODO deactivate start
+        //TODO activaite stop button and clear button
+
+    }
+
+    fun onStop() {
+        Timber.i("onStop Called")
+
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Timber.i("ViewModel destroyed!")
+    }
 }
 

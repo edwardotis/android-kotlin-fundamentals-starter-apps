@@ -32,6 +32,9 @@ import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerB
  */
 class SleepTrackerFragment : Fragment() {
 
+    private lateinit var viewModel: SleepTrackerViewModel
+    private lateinit var viewModelFactory: SleepTrackerViewModelFactory
+
     /**
      * Called when the Fragment is ready to display content to the screen.
      *
@@ -39,10 +42,25 @@ class SleepTrackerFragment : Fragment() {
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
         // Get a reference to the binding object and inflate the fragment views.
         val binding: FragmentSleepTrackerBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_sleep_tracker, container, false)
+        //put onclick listener into xml w/ data binding to viewModel
+
+
+//        Timber.i("Called ViewModelProviders.of")
+//        //uh, without dagger, where does dao and
+//        viewModelFactory = SleepTrackerViewModelFactory(this, this.context)
+//        viewModel = viewModelFactory.create(SleepTrackerViewModel::class.java)
+//
+//
+//        // Set the viewmodel for databinding - this allows the bound layout access
+//        // to all the data in the ViewModel
+//        binding.sleepTrackViewModel = viewModel
+//
+//        // Specify the current activity as the lifecycle owner of the binding.
+//// This is used so that the binding can observe LiveData updates
+//        binding.lifecycleOwner = this
 
         return binding.root
     }

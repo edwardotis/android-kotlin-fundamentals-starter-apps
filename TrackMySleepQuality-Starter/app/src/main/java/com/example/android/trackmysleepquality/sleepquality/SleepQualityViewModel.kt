@@ -15,3 +15,24 @@
  */
 
 package com.example.android.trackmysleepquality.sleepquality
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import com.example.android.trackmysleepquality.database.SleepDatabaseDao
+import timber.log.Timber
+
+class SleepQualityViewModel(val database: SleepDatabaseDao, application:
+Application) : AndroidViewModel(application) {
+
+    /**
+     * Will this pass an int or a string?
+     */
+    fun onSleepQualityClicked() {
+
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Timber.i("ViewModel destroyed!")
+    }
+}
