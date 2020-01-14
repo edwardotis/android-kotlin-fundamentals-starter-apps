@@ -36,7 +36,9 @@ class SleepTrackerViewModel(
 
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-    private var tonight = MutableLiveData<SleepNight?>()
+    private var _tonight = MutableLiveData<SleepNight?>()
+    val tonight: LiveData<SleepNight>
+        get() = tonight
     //TODO is this really ok to setup this LiveData without a coroutine/async wrapper?
     //oh, I think that's part of beauty of LiveData and Room vs the others
     //that return Entity directly
@@ -44,12 +46,17 @@ class SleepTrackerViewModel(
     val nightsString = Transformations.map(nights) { theNights ->
         formatNights(theNights, application.resources)
     }
+    //event which triggers end of the game
+    private val _eventTrackingFinished = MutableLiveData<Boolean>()
+    val eventTrackingFinished: LiveData<Boolean>
+        get() = _eventTrackingFinished
 
     //TODO Boolean or visibility modifier?
     private var startBtnActive = MutableLiveData<Boolean>()
 
     init {
         initializeTonight()
+        _eventTrackingFinished.value = false
         //aha, if we have an active tonight var, then we should init
         //start inactive button. This would be mapping from one liveData
         //to another with Transformation, right?
@@ -57,15 +64,15 @@ class SleepTrackerViewModel(
 
     private fun initializeTonight() {
         uiScope.launch {
-            tonight.value = getTonightFromDatabase()
+            _tonight.value = getTonightFromDatabase()
         }
     }
 
-    private fun initializeNights() {
-        uiScope.launch {
-            nights = sleepDao.getAllNights()
-        }
-    }
+//    private fun initializeNights() {
+//        uiScope.launch {
+//            nights = sleepDao.getAllNights()
+//        }
+//    }
 
     /**
      * Create and Save a SleepNight into dao.
@@ -79,7 +86,7 @@ class SleepTrackerViewModel(
         uiScope.launch {
             val newNight = SleepNight()
             addNight(newNight)
-            tonight.value = getTonightFromDatabase()
+            _tonight.value = getTonightFromDatabase()
         }
         //TODO database create night
         //TODO deactivate start
@@ -90,20 +97,22 @@ class SleepTrackerViewModel(
         Timber.i("onStop Called")
         uiScope.launch {
             //TODO how to change value of tonight endTime?
-            val oldNight = tonight.value ?: return@launch
+            val oldNight = _tonight.value ?: return@launch
             oldNight.endTimeMilli = java.lang.System.currentTimeMillis()
             update(oldNight)
-        }
-
-    }
-
-    fun onClear() {
-        Timber.i("onClear Called")
-        uiScope.launch {
-            clear()
-            tonight.value = null
+            //update stop and start button or no b/c we're going to new fragment
+            finishTracking()
         }
     }
+
+    fun finishTracking() {
+        _eventTrackingFinished.value = true
+    }
+
+    fun onTrackingFinishComplete() {
+        _eventTrackingFinished.value = false
+    }
+
 
     //DAO Wrappers
     private suspend fun update(night: SleepNight) {
@@ -146,6 +155,13 @@ class SleepTrackerViewModel(
     fun onStop() {
         Timber.i("onStop Called")
 
+    }
+
+    fun onClear() {
+        Timber.i("onClear Called")
+        uiScope.launch {
+            clear()
+        }
     }
 
     override fun onCleared() {

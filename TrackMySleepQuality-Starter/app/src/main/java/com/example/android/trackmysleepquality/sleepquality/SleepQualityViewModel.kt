@@ -18,19 +18,44 @@ package com.example.android.trackmysleepquality.sleepquality
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
 import kotlinx.coroutines.*
 import timber.log.Timber
 
-class SleepQualityViewModel(val database: SleepDatabaseDao, application:
+class SleepQualityViewModel(val sleepDao: SleepDatabaseDao, application:
 Application) : AndroidViewModel(application) {
 
+    private var viewModelJob = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+    //pass id in bundleArgs or pull from db? Or just update in
+    // a txn and call get then update, if it's never part of the UI
+//    private val tonight =
+    init {
+
+    }
+
+    fun onClickSleepQuality(qualityDesc: String) {
+        Timber.i("onClickSleepQuality called")
+        //parse int out string w/ int to save
+        //to db in coroutine
+        uiScope.launch {
+
+        }
+
+    }
+
+    //DAO WRAPPERS
+    private suspend fun update(night: SleepNight) {
+        withContext(Dispatchers.IO) {
+            sleepDao.updateNight(night)
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()
-//        viewModelJob.cancel()
+        viewModelJob.cancel()
         Timber.i("ViewModel destroyed!")
     }
 }

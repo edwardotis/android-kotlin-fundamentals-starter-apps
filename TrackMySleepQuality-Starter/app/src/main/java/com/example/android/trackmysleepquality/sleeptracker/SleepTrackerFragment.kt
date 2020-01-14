@@ -22,6 +22,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
@@ -50,13 +52,16 @@ class SleepTrackerFragment : Fragment() {
         //put onclick listener into xml w/ data binding to viewModel
 
 
-        Timber.i("Called viemodelfactory")
+        Timber.i("Called viewmodelfactory")
         val application = requireNotNull(this.activity).application
         val sleepDao = SleepDatabase.getInstance(application).sleepDao
 //        //uh, without dagger, where does dao and
         viewModelFactory = SleepTrackerViewModelFactory(sleepDao, application)
         viewModel = viewModelFactory.create(SleepTrackerViewModel::class.java)
-//
+
+        viewModel.eventTrackingFinished.observe(this, Observer { isFinished ->
+            if (isFinished) trackingFinished()
+        })
 //
 //        // Set the viewmodel for databinding - this allows the bound layout access
 //        // to all the data in the ViewModel
@@ -64,8 +69,13 @@ class SleepTrackerFragment : Fragment() {
 //
 //        // Specify the current activity as the lifecycle owner of the binding.
 //// This is used so that the binding can observe LiveData updates
-//        binding.lifecycleOwner = this
         binding.setLifecycleOwner(this)
         return binding.root
+    }
+
+    private fun trackingFinished() {
+        findNavController(this).navigate(
+                SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepQualityFragment(viewModel.tonight.value!!.nightId))
+        viewModel.onTrackingFinishComplete()
     }
 }

@@ -24,6 +24,10 @@
      click handlers, and state variables. -->
     <data>
 
+        <variable
+            name="sleepQualityViewModel"
+            type="com.example.android.trackmysleepquality.sleepquality.SleepQualityViewModel" />
+
     </data>
 
     <!-- Start of the visible fragment layout using ConstraintLayout -->
@@ -45,7 +49,9 @@
             app:layout_constraintBottom_toTopOf="@+id/quality_zero_image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
+        <!--TODO add same onClick to all of these? How to pass data?-->
+        <!--            android:onClick="@{() -> sleepQualityViewModel.onClickSleepQuality()}"
+        -->
         <ImageView
             android:id="@+id/quality_zero_image"
             android:layout_width="@dimen/icon_size"
