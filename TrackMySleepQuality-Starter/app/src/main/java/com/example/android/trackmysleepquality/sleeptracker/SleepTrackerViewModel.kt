@@ -101,6 +101,7 @@ class SleepTrackerViewModel(
         Timber.i("onClear Called")
         uiScope.launch {
             clear()
+            tonight.value = null
         }
     }
 
