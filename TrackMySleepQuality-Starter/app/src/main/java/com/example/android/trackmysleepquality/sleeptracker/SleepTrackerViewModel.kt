@@ -37,6 +37,9 @@ class SleepTrackerViewModel(
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     private var tonight = MutableLiveData<SleepNight?>()
+    //TODO is this really ok to setup this LiveData without a coroutine/async wrapper?
+    //oh, I think that's part of beauty of LiveData and Room vs the others
+    //that return Entity directly
     private var nights = sleepDao.getAllNights()
     val nightsString = Transformations.map(nights) { theNights ->
         formatNights(theNights, application.resources)
@@ -83,6 +86,17 @@ class SleepTrackerViewModel(
         //TODO activaite stop button and clear button
     }
 
+    fun onStopTracking() {
+        Timber.i("onStop Called")
+        uiScope.launch {
+            //TODO how to change value of tonight endTime?
+            val oldNight = tonight.value ?: return@launch
+            oldNight.endTimeMilli = java.lang.System.currentTimeMillis()
+            update(oldNight)
+        }
+
+    }
+
     fun onClear() {
         Timber.i("onClear Called")
         uiScope.launch {
@@ -91,6 +105,12 @@ class SleepTrackerViewModel(
     }
 
     //DAO Wrappers
+    private suspend fun update(night: SleepNight) {
+        withContext(Dispatchers.IO) {
+            sleepDao.updateNight(night)
+        }
+    }
+
     private suspend fun clear() {
         withContext(Dispatchers.IO) {
             sleepDao.clear()

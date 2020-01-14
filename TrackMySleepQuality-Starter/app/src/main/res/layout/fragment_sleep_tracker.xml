@@ -84,6 +84,7 @@
 
         <Button
             android:id="@+id/stop_button"
+            android:onClick="@{() -> sleepTrackViewModel.onStopTracking()}"
             style="@style/SleepButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
