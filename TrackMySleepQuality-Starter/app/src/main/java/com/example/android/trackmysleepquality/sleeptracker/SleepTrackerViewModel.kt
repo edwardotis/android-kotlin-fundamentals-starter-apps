@@ -63,6 +63,13 @@ class SleepTrackerViewModel(
         it?.isNotEmpty()
     }
 
+    private var _showSnackbarEvent = MutableLiveData<Boolean>()
+    val showSnackBarEvent: LiveData<Boolean>
+        get() = _showSnackbarEvent
+
+    fun doneShowingSnackbar() {
+        _showSnackbarEvent.value = false
+    }
     init {
         initializeTonight()
         _eventTrackingFinished.value = false
@@ -133,7 +140,6 @@ class SleepTrackerViewModel(
     private suspend fun clear() {
         withContext(Dispatchers.IO) {
             sleepDao.clear()
-            //TODO will all livedata objects pick this up correctly?
         }
     }
 
@@ -171,6 +177,8 @@ class SleepTrackerViewModel(
         Timber.i("onClear Called")
         uiScope.launch {
             clear()
+            _tonight.value = null//Disabled stop button since active night is deleted
+            _showSnackbarEvent.value = true
         }
     }
 

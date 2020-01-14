@@ -27,6 +27,7 @@ import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
+import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
 
 /**
@@ -61,6 +62,17 @@ class SleepTrackerFragment : Fragment() {
 
         viewModel.eventTrackingFinished.observe(this, Observer { isFinished ->
             if (isFinished) trackingFinished()
+        })
+
+        viewModel.showSnackBarEvent.observe(this, Observer {
+            if (it == true) {
+                Snackbar.make(
+                        activity!!.findViewById(android.R.id.content),
+                        getString(R.string.cleared_message),
+                        Snackbar.LENGTH_SHORT
+                ).show()
+                viewModel.doneShowingSnackbar()
+            }
         })
 //
 //        // Set the viewmodel for databinding - this allows the bound layout access
