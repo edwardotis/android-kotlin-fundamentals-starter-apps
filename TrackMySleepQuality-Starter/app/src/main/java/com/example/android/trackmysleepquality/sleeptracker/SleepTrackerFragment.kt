@@ -74,11 +74,13 @@ class SleepTrackerFragment : Fragment() {
     }
 
     private fun trackingFinished() {
-        //TODO this is janky if tonight value not set. Just don't navigate
         //and show user an error msg?
-        val nightId = viewModel.tonight.value?.nightId ?: -1L
-        val action = SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepQualityFragment(nightId)
-        findNavController(this).navigate(action)
-        viewModel.onTrackingFinishComplete()
+        viewModel.tonight.value?.let { night ->
+            val nightId = night.nightId
+            val action = SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepQualityFragment(nightId)
+            findNavController(this).navigate(action)
+            viewModel.onTrackingFinishComplete()
+        }
+        //else throw an error/show a error msg to user?
     }
 }
