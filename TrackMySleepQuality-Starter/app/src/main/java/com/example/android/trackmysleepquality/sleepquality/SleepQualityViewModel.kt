@@ -16,19 +16,24 @@
 
 package com.example.android.trackmysleepquality.sleepquality
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
-import com.example.android.trackmysleepquality.database.SleepNight
 import kotlinx.coroutines.*
 import timber.log.Timber
 
-class SleepQualityViewModel(val sleepDao: SleepDatabaseDao, application:
-Application) : AndroidViewModel(application) {
+class SleepQualityViewModel(val database: SleepDatabaseDao, private val sleepNightKey: Long) : ViewModel() {
 
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+    private val _navigateToSleepTracker = MutableLiveData<Boolean?>()
+    val navigateToSleepTracker: LiveData<Boolean?>
+        get() = _navigateToSleepTracker
 
+    fun doneNavigating() {
+        _navigateToSleepTracker.value = null
+    }
     //pass id in bundleArgs or pull from db? Or just update in
     // a txn and call get then update, if it's never part of the UI
 //    private val tonight =
@@ -36,22 +41,30 @@ Application) : AndroidViewModel(application) {
 
     }
 
-    fun onClickSleepQuality(qualityDesc: String) {
+    fun onClickSleepQuality(quality: Int) {
         Timber.i("onClickSleepQuality called")
         //parse int out string w/ int to save
         //to db in coroutine
         uiScope.launch {
-
+            // IO is a thread pool for running operations that access the disk, such as
+            // our Room database.
+            withContext(Dispatchers.IO) {
+                val tonight = database.get(sleepNightKey) ?: return@withContext
+                tonight.sleepQuality = quality
+                database.updateNight(tonight)
+            }
+            // Setting this state variable to true will alert the observer and trigger navigation.
+            _navigateToSleepTracker.value = true
         }
 
     }
 
     //DAO WRAPPERS
-    private suspend fun update(night: SleepNight) {
-        withContext(Dispatchers.IO) {
-            sleepDao.updateNight(night)
-        }
-    }
+//    private suspend fun update(night: SleepNight) {
+//        withContext(Dispatchers.IO) {
+//            database.updateNight(night)
+//        }
+//    }
 
     override fun onCleared() {
         super.onCleared()
