@@ -24,6 +24,7 @@ import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -70,7 +71,14 @@ class SleepDatabaseTest {
         assertEquals(1L, tonight?.nightId)
     }
 
-//    @Test
-//    @Throws(Exception::class)
-//
+    @Test
+    @Throws(Exception::class)
+    fun test_clear() {
+        val night1 = SleepNight()
+        val night2 = SleepNight()
+        sleepDao.addNight(night1)
+        sleepDao.addNight(night2)
+        sleepDao.clear()
+        assertNull(sleepDao.getTonight())
+    }
 }
