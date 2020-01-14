@@ -23,7 +23,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.android.trackmysleepquality.R
+import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
+import timber.log.Timber
 
 /**
  * A fragment with buttons to record start and end times for sleep, which are saved in
@@ -48,20 +50,22 @@ class SleepTrackerFragment : Fragment() {
         //put onclick listener into xml w/ data binding to viewModel
 
 
-//        Timber.i("Called ViewModelProviders.of")
+        Timber.i("Called viemodelfactory")
+        val application = requireNotNull(this.activity).application
+        val sleepDao = SleepDatabase.getInstance(application).sleepDao
 //        //uh, without dagger, where does dao and
-//        viewModelFactory = SleepTrackerViewModelFactory(this, this.context)
-//        viewModel = viewModelFactory.create(SleepTrackerViewModel::class.java)
+        viewModelFactory = SleepTrackerViewModelFactory(sleepDao, application)
+        viewModel = viewModelFactory.create(SleepTrackerViewModel::class.java)
 //
 //
 //        // Set the viewmodel for databinding - this allows the bound layout access
 //        // to all the data in the ViewModel
-//        binding.sleepTrackViewModel = viewModel
+        binding.sleepTrackViewModel = viewModel
 //
 //        // Specify the current activity as the lifecycle owner of the binding.
 //// This is used so that the binding can observe LiveData updates
 //        binding.lifecycleOwner = this
-
+        binding.setLifecycleOwner(this)
         return binding.root
     }
 }
