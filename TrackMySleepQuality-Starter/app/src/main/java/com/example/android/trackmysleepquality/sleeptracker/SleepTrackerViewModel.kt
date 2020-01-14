@@ -37,8 +37,9 @@ class SleepTrackerViewModel(
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     private var _tonight = MutableLiveData<SleepNight?>()
-    val tonight: LiveData<SleepNight>
-        get() = tonight
+    val tonight: LiveData<SleepNight?>
+        get() = _tonight
+
     //TODO is this really ok to setup this LiveData without a coroutine/async wrapper?
     //oh, I think that's part of beauty of LiveData and Room vs the others
     //that return Entity directly
@@ -94,18 +95,18 @@ class SleepTrackerViewModel(
     }
 
     fun onStopTracking() {
-        Timber.i("onStop Called")
+        Timber.i("onStopTracking Called")
         uiScope.launch {
             //TODO how to change value of tonight endTime?
             val oldNight = _tonight.value ?: return@launch
             oldNight.endTimeMilli = java.lang.System.currentTimeMillis()
             update(oldNight)
             //update stop and start button or no b/c we're going to new fragment
-            finishTracking()
         }
+        finishTracking()
     }
 
-    fun finishTracking() {
+    private fun finishTracking() {
         _eventTrackingFinished.value = true
     }
 
@@ -152,10 +153,11 @@ class SleepTrackerViewModel(
         }
     }
 
-    fun onStop() {
-        Timber.i("onStop Called")
-
-    }
+//    fun onStop() {
+//        Timber.i("onStop Called")
+//        _eventTrackingFinished.value = true
+//
+//    }
 
     fun onClear() {
         Timber.i("onClear Called")
