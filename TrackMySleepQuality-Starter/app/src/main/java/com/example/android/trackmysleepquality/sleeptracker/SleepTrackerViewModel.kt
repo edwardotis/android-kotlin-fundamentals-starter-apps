@@ -47,6 +47,11 @@ class SleepTrackerViewModel(
     val nightsString = Transformations.map(nights) { theNights ->
         formatNights(theNights, application.resources)
     }
+
+    // I don't think the tutorial's version was necessarily better than this way
+    // and reading the viewModel.tonight value in fragment. eh, I guess their way
+    // pushed more data into view, instead of pulling it from model. But, eh.
+    // Many ways to handle it.
     //event which triggers end of the game
     private val _eventTrackingFinished = MutableLiveData<Boolean>()
     val eventTrackingFinished: LiveData<Boolean>
@@ -104,9 +109,6 @@ class SleepTrackerViewModel(
             addNight(newNight)
             _tonight.value = getTonightFromDatabase()
         }
-        //TODO database create night
-        //TODO deactivate start
-        //TODO activaite stop button and clear button
     }
 
     fun onStopTracking() {
