@@ -26,11 +26,13 @@ class SleepNightAdapter : ListAdapter<SleepNight, SleepNightAdapter.SleepViewHol
     }
 
     class SleepViewHolder private constructor(val binding: ListItemSleepNightBinding) : RecyclerView.ViewHolder(binding.root){
-            fun bind(item: SleepNight) {
+        //@see BindingUtils.kt and app:<bindingName> in layout xml file
+        fun bind(item: SleepNight) {
                 binding.mySleepNight = item
                 binding.executePendingBindings()
         }
 
+        //static factory method
         companion object {
             fun from(parent: ViewGroup): SleepViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
