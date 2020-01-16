@@ -24,11 +24,7 @@ import androidx.lifecycle.ViewModel
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.formatNights
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 /**
  * ViewModel for SleepTrackerFragment.
@@ -114,6 +110,11 @@ class SleepTrackerViewModel(
      */
     private val _navigateToSleepQuality = MutableLiveData<SleepNight>()
 
+
+    private val _navigateToSleepDetail = MutableLiveData<Long>()
+    val navigateToSleepDetail
+        get() = _navigateToSleepDetail
+
     /**
      * If this is non-null, immediately navigate to [SleepQualityFragment] and call [doneNavigating]
      */
@@ -138,6 +139,7 @@ class SleepTrackerViewModel(
      */
     fun doneNavigating() {
         _navigateToSleepQuality.value = null
+        _navigateToSleepDetail.value = null
     }
 
     init {
@@ -148,6 +150,16 @@ class SleepTrackerViewModel(
         uiScope.launch {
             tonight.value = getTonightFromDatabase()
         }
+    }
+
+    fun onSleepIconClicked(nightId:Long){
+        //ugh don't tell me we set another observed nav variable instead
+        //of just dispatching from here
+        _navigateToSleepDetail.value = nightId
+    }
+
+    fun onSleepDetailNavigated() {
+        _navigateToSleepDetail.value = null
     }
 
     /**
