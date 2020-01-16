@@ -73,7 +73,6 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/sleep_list"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/clear_button"
