@@ -25,6 +25,7 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "daily_sleep_quality_table")
 data class SleepNight(
+
         @PrimaryKey(autoGenerate = true)
         var nightId: Long = 0L,
 
