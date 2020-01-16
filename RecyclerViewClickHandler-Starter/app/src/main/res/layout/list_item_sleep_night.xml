@@ -23,6 +23,9 @@
         <variable
             name="sleep"
             type="com.example.android.trackmysleepquality.database.SleepNight"/>
+        <variable
+            name="clickListener"
+            type="com.example.android.trackmysleepquality.sleeptracker.SleepNightListener" />
     </data>
 
 
@@ -32,6 +35,7 @@
 
         <ImageView
             android:id="@+id/quality_image"
+            android:onClick="@{() -> clickListener.onClick(sleep)}"
             android:layout_width="@dimen/icon_size"
             android:layout_height="60dp"
             android:layout_marginStart="16dp"
