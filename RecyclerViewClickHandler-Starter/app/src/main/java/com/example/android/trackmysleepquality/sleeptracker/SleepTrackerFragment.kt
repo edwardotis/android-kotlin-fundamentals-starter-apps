@@ -77,9 +77,14 @@ class SleepTrackerFragment : Fragment() {
         })
         binding.sleepList.adapter = adapter
 
-        sleepTrackerViewModel.nights.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                adapter.submitList(it)
+        sleepTrackerViewModel.nights.observe(viewLifecycleOwner, Observer {sleepNights ->
+            //pretty sure we need to remove the null let check, or else no header will show up for empty list
+            //nope, works with null check b/c it's never null. It returns a LiveData object
+            //during construction of the ViewModel, but sure. leave in null check on the LiveData
+            //may catch some race condition
+            sleepNights?.let {
+//                adapter.submitList(it)
+                adapter.addHeaderAndSubmitList(sleepNights)
             }
         })
 
