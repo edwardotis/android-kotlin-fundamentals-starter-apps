@@ -65,8 +65,9 @@ class OverviewViewModel : ViewModel() {
                 var listResult = getPropertiesDeferred.await()
                 _response.value =
                         "Success: ${listResult.size} Mars properties retrieved"
-                _property.value = listResult.first()
-//                _property.value = if(listResult.size > 0) listResult[0]
+                if (listResult.isNotEmpty()) {
+                    _property.value = listResult.first()
+                }
             } catch (e: Exception) {
                 _response.value = "Failure: ${e.message}"
             }
