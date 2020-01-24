@@ -68,6 +68,8 @@ class OverviewViewModel : ViewModel() {
                 if (listResult.isNotEmpty()) {
                     _property.value = listResult.first()
                 }
+                //ah, else required to have single line if statement, and we don't want to set it to null. kk.
+//                _property.value = if (listResult.isNotEmpty()) listResult.first() else null
             } catch (e: Exception) {
                 _response.value = "Failure: ${e.message}"
             }
