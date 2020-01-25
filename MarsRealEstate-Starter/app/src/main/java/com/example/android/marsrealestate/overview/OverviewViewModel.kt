@@ -62,10 +62,11 @@ class OverviewViewModel : ViewModel() {
         coroutineScope.launch {
             var getPropertiesDeferred = MarsApi.retrofitService.getProperties()
             try {
+                //TODO This image never loads into view. Bug in tutorial.
                 _status.value = MarsApiStatus.LOADING
+
                 var listResult = getPropertiesDeferred.await()
                 _status.value = MarsApiStatus.DONE
-//                        "Success: ${listResult.size} Mars properties retrieved"
                 if (listResult.isNotEmpty()) {
                     _properties.value = listResult
                 }
@@ -74,7 +75,6 @@ class OverviewViewModel : ViewModel() {
             } catch (e: Exception) {
                 _status.value = MarsApiStatus.ERROR
                 _properties.value = listOf()
-//                _status.value = "Failure: ${e.message}"
             }
 
         }
