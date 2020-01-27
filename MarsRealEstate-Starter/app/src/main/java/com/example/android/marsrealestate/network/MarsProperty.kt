@@ -23,5 +23,10 @@ data class MarsProperty(
         val id: String,
         @Json(name = "img_src") val imgSrcUrl: String,
         val type: String,
-        val price: Double
-)
+        val price: Double) {
+    //interesting. Is this a static method?
+    //oh, it's just normal class body, using type. ok
+    val isRental
+        get() = type == "rent"
+}
+
