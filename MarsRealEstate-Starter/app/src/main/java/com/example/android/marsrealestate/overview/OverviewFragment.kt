@@ -53,6 +53,9 @@ class OverviewFragment : Fragment() {
             property?.let {
                 val action = OverviewFragmentDirections.actionShowDetail(property)
                 this.findNavController().navigate(action)
+                //TODO if you don't reset the viewModel's nav property, then upon hitting Back button, you will
+                //enter this onCreateView method, observe the viewModel still has a value,
+                //and you'll crash trying to navigate b/c Navigation module isn't initialized fully yet
                 viewModel.onPropertySelectFinished()
             }
         })
