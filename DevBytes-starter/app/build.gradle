@@ -85,7 +85,7 @@ dependencies {
 
     // arch components
     // ViewModel and LiveData
-    def lifecycle_version = "2.2.0-alpha01"
+    def lifecycle_version = '2.2.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
     // logging
@@ -94,5 +94,9 @@ dependencies {
     // glide for images
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     kapt 'com.github.bumptech.glide:compiler:4.7.1'
+
+    def room_version = '2.2.3'
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
 }
