@@ -18,6 +18,7 @@ package com.example.android.marsrealestate.detail
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.example.android.marsrealestate.R
 import com.example.android.marsrealestate.network.MarsProperty
 
 /**
@@ -29,8 +30,29 @@ class DetailViewModel(marsProperty: MarsProperty, app: Application) : AndroidVie
     val selectedProperty: LiveData<MarsProperty>
         get() = _selectedProperty
 
-    val monthlyRental = Transformations.map(selectedProperty) { theProperty ->
-        theProperty.price / 12
+//    val monthlyRental = Transformations.map(selectedProperty) { theProperty ->
+//        theProperty.price / 12
+//    }
+
+    val displayPropertyType = Transformations.map(selectedProperty) {
+        app.applicationContext.getString(R.string.display_type,
+                app.applicationContext.getString(
+                        when (it.isRental) {
+                            true -> R.string.type_rent
+                            false -> R.string.type_sale
+                        }))
+    }
+
+    val displayPropertyPrice = Transformations.map(selectedProperty) {
+        val adjustedPrice = when (it.isRental) {
+            true -> it.price / 12 //monthly price
+            false -> it.price
+        }
+        app.applicationContext.getString(
+                when (it.isRental) {
+                    true -> R.string.display_price_monthly_rental
+                    false -> R.string.display_price
+                }, adjustedPrice)
     }
 
     init {

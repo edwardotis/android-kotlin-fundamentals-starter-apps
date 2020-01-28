@@ -53,10 +53,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:src="@tools:sample/backgrounds/scenic" />
-
+            <!--            This logic in xml is bad. Use @strings.xml in viewmodel transformation instead -->
+            <!--                android:text="@{viewModel.selectedProperty.rental ? @string/display_type(@string/type_rent) : @string/display_type(@string/type_sale)}"
+            -->
             <TextView
                 android:id="@+id/property_type_text"
-                android:text="@{viewModel.selectedProperty.rental ? @string/display_type(@string/type_rent) : @string/display_type(@string/type_sale)}"
+                android:text="@{viewModel.displayPropertyType}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -65,11 +67,11 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/main_photo_image"
                 tools:text="To Rent" />
-
-            <!--            TODO format property price nicely-->
+            <!--                android:text="@{viewModel.selectedProperty.rental ? @string/display_price_monthly_rental(viewModel.monthlyRental) : @string/display_price(viewModel.selectedProperty.price)}"
+            -->
             <TextView
                 android:id="@+id/price_value_text"
-                android:text="@{viewModel.selectedProperty.rental ? @string/display_price_monthly_rental(viewModel.monthlyRental) : @string/display_price(viewModel.selectedProperty.price)}"
+                android:text="@{viewModel.displayPropertyPrice}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
