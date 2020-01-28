@@ -33,7 +33,12 @@ class DetailFragment : Fragment() {
 
         @Suppress("UNUSED_VARIABLE")
         val application = requireNotNull(activity).application
+        val args = DetailFragmentArgs.fromBundle(arguments!!)
+        val viewModeFactory = DetailViewModelFactory(args.property, application)
+        val viewModel = ViewModelProviders.of(this, viewModeFactory).get(DetailViewModel::class.java)
         val binding = FragmentDetailBinding.inflate(inflater)
+        binding.viewModel = viewModel
+        binding.myProperty = viewModel.selectedProperty.value
         binding.setLifecycleOwner(this)
         return binding.root
     }
