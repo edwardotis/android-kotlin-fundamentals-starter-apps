@@ -50,7 +50,7 @@ class VideosRepository(private val database: VideosDatabase) {
         }
     }
 
-//    val videos: LiveData<List<DevByteVideo>> = database.videoDao.getVideos()
+//    val videos: LiveData<PagedList<DatabaseVideo>> = database.videoDao.getVideos()
 
     val videos: LiveData<List<DevByteVideo>> = Transformations.map(database.videoDao.getVideos()) {
         it.asDomainModel()

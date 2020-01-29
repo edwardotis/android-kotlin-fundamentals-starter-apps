@@ -40,6 +40,7 @@ data class DatabaseVideo constructor(
 /**
  * Map DatabaseVideos to domain entities
  */
+
 fun List<DatabaseVideo>.asDomainModel(): List<DevByteVideo> {
         return map {
                 DevByteVideo(

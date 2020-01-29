@@ -18,13 +18,14 @@ package com.example.android.devbyteviewer.database
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.paging.PagedList
 import androidx.room.*
 
 @Dao
 interface VideoDao {
 
     @Query("select * from databasevideo")
-    fun getVideos(): LiveData<List<DatabaseVideo>>
+    fun getVideos(): LiveData<PagedList<DatabaseVideo>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll( videos: List<DatabaseVideo>)

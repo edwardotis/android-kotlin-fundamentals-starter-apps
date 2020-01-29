@@ -16,6 +16,7 @@
 
 package com.example.android.devbyteviewer.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -28,6 +29,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.devbyteviewer.R
@@ -126,7 +129,7 @@ class DevByteFragment : Fragment() {
 
 
         // Observer for the network error.
-        viewModel.eventNetworkError.observe(this, Observer<Boolean> { isNetworkError ->
+        viewModel.eventNetworkError.observe(viewLifecycleOwner, Observer<Boolean> { isNetworkError ->
             if (isNetworkError) onNetworkError()
         })
 
@@ -169,7 +172,34 @@ class VideoClick(val block: (DevByteVideo) -> Unit) {
 /**
  * RecyclerView Adapter for setting up data binding on the items in the list.
  */
-class DevByteAdapter(val callback: VideoClick) : RecyclerView.Adapter<DevByteViewHolder>() {
+//class DevByteAdapter(val callback: VideoClick) : RecyclerView.Adapter<DevByteViewHolder>() {
+class DevByteAdapter(val callback: VideoClick) :
+        PagedListAdapter<DevByteVideo, DevByteViewHolder>(DiffCallback) {
+
+
+    companion object DiffCallback : DiffUtil.ItemCallback<DevByteVideo>() {
+        /**
+         * This diff callback informs the PagedListAdapter how to compute list differences when new
+         * PagedLists arrive.
+         * <p>
+         * When you add a Cheese with the 'Add' button, the PagedListAdapter uses diffCallback to
+         * detect there's only a single item difference from before, so it only needs to animate and
+         * rebind a single view.
+         *
+         * @see DiffUtil
+         */
+//        private val diffCallback = object : DiffUtil.ItemCallback<DevByteVideo>() {
+        override fun areItemsTheSame(oldItem: DevByteVideo, newItem: DevByteVideo): Boolean =
+                oldItem.url == newItem.url
+
+        /**
+         * Note that in kotlin, == checking on data classes compares all contents, but in Java,
+         * typically you'll implement Object#equals, and use it to compare object contents.
+         */
+        @SuppressLint("DiffUtilEquals")
+        override fun areContentsTheSame(oldItem: DevByteVideo, newItem: DevByteVideo): Boolean =
+                oldItem === newItem
+    }
 
     /**
      * The videos that our Adapter will show
@@ -177,10 +207,11 @@ class DevByteAdapter(val callback: VideoClick) : RecyclerView.Adapter<DevByteVie
     var videos: List<DevByteVideo> = emptyList()
         set(value) {
             field = value
-            // For an extra challenge, update this to use the paging library.
+            //TODO For an extra challenge, update this to use the paging library.
 
             // Notify any registered observers that the data set has changed. This will cause every
             // element in our RecyclerView to be invalidated.
+            //TODO replace this with paged list way
             notifyDataSetChanged()
         }
 
