@@ -16,11 +16,9 @@
 
 package com.example.android.devbyteviewer.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.paging.LivePagedListBuilder
 import com.example.android.devbyteviewer.database.VideosDatabase
 import com.example.android.devbyteviewer.database.asDomainModel
-import com.example.android.devbyteviewer.domain.DevByteVideo
 import com.example.android.devbyteviewer.network.DevByteNetwork
 import com.example.android.devbyteviewer.network.asDatabaseModel
 import kotlinx.coroutines.Dispatchers
@@ -45,15 +43,23 @@ class VideosRepository(private val database: VideosDatabase) {
             Timber.d("refresh videos is called");
             val playlist = DevByteNetwork.devbytes.getPlaylist().await()
             database.videoDao.insertAll(playlist.asDatabaseModel())
-
-
         }
     }
 
-//    val videos: LiveData<PagedList<DatabaseVideo>> = database.videoDao.getVideos()
+    /**
+     * OK major changes coming in here to support boundary callback
+     * com/example/android/codelabs/paging/data/GithubRepository.kt
+     */
+    private val dsFactoryDatabaseVideos = database.videoDao.getVideos()
+    //This line converts from DatabaseVideo into DevByteVideo. Cannot use Transformation on DataSourceFactorys
+    private val dsFactoryDevByteVideos = dsFactoryDatabaseVideos.mapByPage { dbVideo ->
+        dbVideo.asDomainModel()
+    }
+    val videos = LivePagedListBuilder(dsFactoryDevByteVideos, DATABASE_PAGE_SIZE).build()
 
-    val videos: LiveData<List<DevByteVideo>> = Transformations.map(database.videoDao.getVideos()) {
-        it.asDomainModel()
+    companion object {
+        private const val NETWORK_PAGE_SIZE = 50
+        private const val DATABASE_PAGE_SIZE = 20
     }
 
 }

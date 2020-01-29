@@ -53,7 +53,7 @@ data class NetworkVideo(
         val closedCaptions: String?)
 
 /**
- * Convert Network results to database objects
+ * Convert Network results to domain objects
  */
 fun NetworkVideoContainer.asDomainModel(): List<DevByteVideo> {
     return videos.map {

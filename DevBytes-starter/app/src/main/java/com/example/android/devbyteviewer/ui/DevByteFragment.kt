@@ -29,6 +29,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.paging.PagedList
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -60,7 +61,7 @@ class DevByteFragment : Fragment() {
     /**
      * RecyclerView Adapter for converting a list of Video to cards.
      */
-    private var viewModelAdapter: DevByteAdapter? = null
+    private lateinit var viewModelAdapter: DevByteAdapter
 
     /**
      * Called when the fragment's activity has been created and this
@@ -70,11 +71,7 @@ class DevByteFragment : Fragment() {
      */
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.playlist.observe(viewLifecycleOwner, Observer<List<DevByteVideo>> { videos ->
-            videos?.apply {
-                viewModelAdapter?.videos = videos
-            }
-        })
+
     }
 
     /**
@@ -133,6 +130,14 @@ class DevByteFragment : Fragment() {
             if (isNetworkError) onNetworkError()
         })
 
+        viewModel.playlist.observe(viewLifecycleOwner, Observer<PagedList<DevByteVideo>> { videos ->
+            videos?.apply {
+                // showEmptyList(videos?.size == 0)
+                //TODO consider adding method to viewmodel to do this in order to show empty list p
+                //_eventNetworkError.value = true
+                viewModelAdapter.submitList(videos)
+            }
+        })
         return binding.root
     }
 
@@ -202,20 +207,6 @@ class DevByteAdapter(val callback: VideoClick) :
     }
 
     /**
-     * The videos that our Adapter will show
-     */
-    var videos: List<DevByteVideo> = emptyList()
-        set(value) {
-            field = value
-            //TODO For an extra challenge, update this to use the paging library.
-
-            // Notify any registered observers that the data set has changed. This will cause every
-            // element in our RecyclerView to be invalidated.
-            //TODO replace this with paged list way
-            notifyDataSetChanged()
-        }
-
-    /**
      * Called when RecyclerView needs a new {@link ViewHolder} of the given type to represent
      * an item.
      */
@@ -228,8 +219,6 @@ class DevByteAdapter(val callback: VideoClick) :
         return DevByteViewHolder(withDataBinding)
     }
 
-    override fun getItemCount() = videos.size
-
     /**
      * Called by RecyclerView to display the data at the specified position. This method should
      * update the contents of the {@link ViewHolder#itemView} to reflect the item at the given
@@ -237,7 +226,7 @@ class DevByteAdapter(val callback: VideoClick) :
      */
     override fun onBindViewHolder(holder: DevByteViewHolder, position: Int) {
         holder.viewDataBinding.also {
-            it.video = videos[position]
+            it.video = getItem(position)
             it.videoCallback = callback
         }
     }
