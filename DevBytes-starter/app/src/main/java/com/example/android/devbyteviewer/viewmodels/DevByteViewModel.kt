@@ -23,8 +23,6 @@ import com.example.android.devbyteviewer.repository.VideosRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
-import java.io.IOException
 
 /**
  * DevByteViewModel designed to store and manage UI-related data in a lifecycle conscious way. This
@@ -103,20 +101,20 @@ class DevByteViewModel(application: Application) : AndroidViewModel(application)
      * Refresh data from the repository. Use a coroutine launch to run in a
      * background thread.
      */
-    private fun refreshDataFromRepository() {
-        viewModelScope.launch {
-            try {
-                val data = videosRepository.refreshVideos()
-                _eventNetworkError.value = false
-                _isNetworkErrorShown.value = false
-
-            } catch (networkError: IOException) {
-                // Show a Toast error message and hide the progress bar.
-                if(playlist.value.isNullOrEmpty())
-                    _eventNetworkError.value = true
-            }
-        }
-    }
+//    private fun refreshDataFromRepository() {
+//        viewModelScope.launch {
+//            try {
+//                val data = videosRepository.refreshVideos()
+//                _eventNetworkError.value = false
+//                _isNetworkErrorShown.value = false
+//
+//            } catch (networkError: IOException) {
+//                // Show a Toast error message and hide the progress bar.
+//                if(playlist.value.isNullOrEmpty())
+//                    _eventNetworkError.value = true
+//            }
+//        }
+//    }
 
     /**
      * Refresh data from network and pass it via LiveData. Use a coroutine launch to get to

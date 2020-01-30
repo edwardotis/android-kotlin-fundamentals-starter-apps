@@ -28,10 +28,9 @@ import timber.log.Timber
 /**
  * Repository for fetching devbyte videos from the network and storing them on disk
  */
-class VideosRepository(private val database: VideosDatabase, private val viewModelScope: CoroutineScope) {
+class VideosRepository(private val database: VideosDatabase, private val coroutineScope: CoroutineScope) {
 
     /**
-     * TODO don't know that we need to do anything with return values
      * given the observer on the chain:
      * dsFactoryDatabaseVideos -> dsFactoryDevByteVideos -> videos below
      *
@@ -47,7 +46,7 @@ class VideosRepository(private val database: VideosDatabase, private val viewMod
          * Construct a boundary callback object each time
          */
         Timber.d("refresh videos is called")
-        val boundaryCallback = VideosBoundaryCallback(database, viewModelScope)
+        val boundaryCallback = VideosBoundaryCallback(database, coroutineScope)
         val dsFactoryDatabaseVideos = database.videoDao.getVideos()
         val dsFactoryDevByteVideos = dsFactoryDatabaseVideos.mapByPage { dbVideo ->
             dbVideo.asDomainModel()
