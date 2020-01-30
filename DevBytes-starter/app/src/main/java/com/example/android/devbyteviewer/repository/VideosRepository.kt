@@ -72,8 +72,11 @@ class VideosRepository(private val database: VideosDatabase, private val viewMod
 //    }
 //    val videos = LivePagedListBuilder(dsFactoryDevByteVideos, DATABASE_PAGE_SIZE).build()
 
+    /**
+     * realistically, the network size should be biggest b/c it takes waaay longer than db query to return
+     */
     companion object {
-        const val NETWORK_PAGE_SIZE = 5
+        const val NETWORK_PAGE_SIZE = 15
         private const val DATABASE_PAGE_SIZE = 10
     }
 

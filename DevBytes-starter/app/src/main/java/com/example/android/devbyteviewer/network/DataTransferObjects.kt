@@ -63,14 +63,17 @@ data class NetworkVideo(
         val id: Long,
         val title: String,
         val description: String?,
+        val url_l: String?,//large 1024px max side
         val url_c: String?,//medium 800px max side
         val url_q: String?,//150px square
         val dateupload: Long,
         val url_t: String,//thumb 100px max
         val closedCaptions: String?) {
     fun largestUri(): String {
-        val resp: String = if (!TextUtils.isEmpty(url_c)) {
-            url_c!!
+        val resp: String = if (!TextUtils.isEmpty(url_l)) {
+            url_l!!
+        } else if (!TextUtils.isEmpty(url_q)) {
+            url_q!!
         } else if (!TextUtils.isEmpty(url_q)) {
             url_q!!
         } else { //TODO originalUri isn't guaranteed, but thumb is
