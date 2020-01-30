@@ -101,6 +101,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="this is a video @android:string/fingerprint_icon_content_description" />
 
+            <!--                  scaleType Note: Glide caching can make testing on device a pain. Full rebuilds required
+                  https://thoughtbot.com/blog/android-imageview-scaletype-a-visual-guide
+                  -->
             <ImageView
                 android:id="@+id/video_thumbnail"
                 android:layout_width="0dp"
