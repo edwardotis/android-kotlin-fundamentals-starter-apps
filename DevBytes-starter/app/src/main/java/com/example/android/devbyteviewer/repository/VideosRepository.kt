@@ -16,21 +16,25 @@
 
 package com.example.android.devbyteviewer.repository
 
+import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.example.android.devbyteviewer.database.VideosDatabase
 import com.example.android.devbyteviewer.database.asDomainModel
-import com.example.android.devbyteviewer.network.DevByteNetwork
-import com.example.android.devbyteviewer.network.asDatabaseModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.example.android.devbyteviewer.domain.DevByteVideo
+import kotlinx.coroutines.CoroutineScope
 import timber.log.Timber
 
 /**
  * Repository for fetching devbyte videos from the network and storing them on disk
  */
-class VideosRepository(private val database: VideosDatabase) {
+class VideosRepository(private val database: VideosDatabase, private val viewModelScope: CoroutineScope) {
 
     /**
+     * TODO don't know that we need to do anything with return values
+     * given the observer on the chain:
+     * dsFactoryDatabaseVideos -> dsFactoryDevByteVideos -> videos below
+     *
      * Refresh the videos stored in the offline cache.
      *
      * This function uses the IO dispatcher to ensure the database insert database operation
@@ -38,25 +42,35 @@ class VideosRepository(private val database: VideosDatabase) {
      * function is now safe to call from any thread including the Main thread.
      *
      */
-    suspend fun refreshVideos() {
-        withContext(Dispatchers.IO) {
-            Timber.d("refresh videos is called");
-//            val playlist = DevByteNetwork.devbytes.getPlaylist(1, NETWORK_PAGE_SIZE).await()
-            val playlist = DevByteNetwork.devbytes.getPlaylist().await()
-            database.videoDao.insertAll(playlist.asDatabaseModel())
+    fun refreshVideos(): LiveData<PagedList<DevByteVideo>> {
+        /**
+         * Construct a boundary callback object each time
+         */
+        Timber.d("refresh videos is called")
+        val boundaryCallback = VideosBoundaryCallback(database, viewModelScope)
+        val dsFactoryDatabaseVideos = database.videoDao.getVideos()
+        val dsFactoryDevByteVideos = dsFactoryDatabaseVideos.mapByPage { dbVideo ->
+            dbVideo.asDomainModel()
         }
+        // Get the paged list
+        val videos = LivePagedListBuilder(dsFactoryDevByteVideos, DATABASE_PAGE_SIZE)
+                .setBoundaryCallback(boundaryCallback)
+                .build()
+
+
+        return videos
     }
 
     /**
      * OK major changes coming in here to support boundary callback
      * com/example/android/codelabs/paging/data/GithubRepository.kt
      */
-    private val dsFactoryDatabaseVideos = database.videoDao.getVideos()
-    //This line converts from DatabaseVideo into DevByteVideo. Cannot use Transformation on DataSourceFactorys
-    private val dsFactoryDevByteVideos = dsFactoryDatabaseVideos.mapByPage { dbVideo ->
-        dbVideo.asDomainModel()
-    }
-    val videos = LivePagedListBuilder(dsFactoryDevByteVideos, DATABASE_PAGE_SIZE).build()
+//    private val dsFactoryDatabaseVideos = database.videoDao.getVideos()
+//    //This line converts from DatabaseVideo into DevByteVideo. Cannot use Transformation on DataSourceFactorys
+//    private val dsFactoryDevByteVideos = dsFactoryDatabaseVideos.mapByPage { dbVideo ->
+//        dbVideo.asDomainModel()
+//    }
+//    val videos = LivePagedListBuilder(dsFactoryDevByteVideos, DATABASE_PAGE_SIZE).build()
 
     companion object {
         private const val NETWORK_PAGE_SIZE = 50

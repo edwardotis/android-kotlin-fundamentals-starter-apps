@@ -17,17 +17,13 @@
 package com.example.android.devbyteviewer.viewmodels
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.example.android.devbyteviewer.database.getDatabase
-import com.example.android.devbyteviewer.domain.DevByteVideo
-import com.example.android.devbyteviewer.network.DevByteNetwork
-import com.example.android.devbyteviewer.network.asDomainModel
 import com.example.android.devbyteviewer.repository.VideosRepository
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import java.io.IOException
 
 /**
@@ -60,12 +56,12 @@ class DevByteViewModel(application: Application) : AndroidViewModel(application)
     /**
      * The data source this ViewModel will fetch results from.
      */
-    private val videosRepository = VideosRepository(getDatabase(application))
+    private val videosRepository = VideosRepository(getDatabase(application), viewModelScope)
 
     /**
      * A playlist of videos displayed on the screen.
      */
-    val playlist = videosRepository.videos
+    val playlist = videosRepository.refreshVideos()
 
     /**
      * Event triggered for network error. This is private to avoid exposing a
@@ -97,18 +93,20 @@ class DevByteViewModel(application: Application) : AndroidViewModel(application)
      * init{} is called immediately when this ViewModel is created.
      */
     init {
+        //This is done now in setting playlist val above
 //        refreshDataFromNetwork()
-        refreshDataFromRepository()
+//        refreshDataFromRepository()
     }
 
     /**
+     * TODO does this need to be bgthread, or just the BoundaryCallback?
      * Refresh data from the repository. Use a coroutine launch to run in a
      * background thread.
      */
     private fun refreshDataFromRepository() {
         viewModelScope.launch {
             try {
-                videosRepository.refreshVideos()
+                val data = videosRepository.refreshVideos()
                 _eventNetworkError.value = false
                 _isNetworkErrorShown.value = false
 

@@ -39,6 +39,7 @@ interface DevbyteService {
 }
 
 /**
+ * TODO How does using a singleton like this impact mocking for tests?
  * Main entry point for network access. Call like `DevByteNetwork.devbytes.getPlaylist()`
  */
 object DevByteNetwork {
