@@ -28,10 +28,14 @@ import retrofit2.http.GET
 
 /**
  * A retrofit service to fetch a devbyte playlist.
+ * //TODO add query pagesize
  */
 interface DevbyteService {
     @GET("devbytes")
     fun getPlaylist(): Deferred<NetworkVideoContainer>
+
+//    @GET("?method=flickr.photos.search&api_key=949e98778755d1982f537d56236bbb42&is_getty=&format=json&nojsoncallback=1&content_type=1&media=photos&sort=relevance&extras=url_t,url_c,url_l,url_o,url_s,url_sq,url_q&text=train")
+//    fun getPlaylist(@Query("page") pageNumber: Int, @Query("per_page") pageSize: Int) : Deferred<NetworkVideoContainer>
 }
 
 /**
@@ -42,6 +46,7 @@ object DevByteNetwork {
     // Configure retrofit to parse JSON and use coroutines
     private val retrofit = Retrofit.Builder()
             .baseUrl("https://android-kotlin-fun-mars-server.appspot.com/")
+//            .baseUrl("https://api.flickr.com/services/rest/")
             .addConverterFactory(MoshiConverterFactory.create())
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
