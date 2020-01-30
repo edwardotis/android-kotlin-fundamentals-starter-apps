@@ -23,7 +23,9 @@ import androidx.room.*
 @Dao
 interface VideoDao {
 
-    @Query("select * from databasevideo")
+    //TODO order by dateCreated or some other rational operation, but page
+    //will do for the moment.
+    @Query("select * from databasevideo ORDER BY page ASC")
     fun getVideos(): DataSource.Factory<Int, DatabaseVideo>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

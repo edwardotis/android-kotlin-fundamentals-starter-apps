@@ -31,8 +31,10 @@ import com.example.android.devbyteviewer.domain.DevByteVideo
 @Entity
 data class DatabaseVideo constructor(
         @PrimaryKey
+        val id: Long,
+        val page: Int,
         val url: String,
-        val updated: String,
+        val updated: Long,
         val title: String,
         val description: String,
         val thumbnail: String)
@@ -44,10 +46,12 @@ data class DatabaseVideo constructor(
 fun List<DatabaseVideo>.asDomainModel(): List<DevByteVideo> {
         return map {
                 DevByteVideo(
+                        id = it.id,
                         url = it.url,
                         title = it.title,
                         description = it.description,
                         updated = it.updated,
-                        thumbnail = it.thumbnail)
+                        thumbnail = it.thumbnail,
+                        page = it.page)
         }
 }

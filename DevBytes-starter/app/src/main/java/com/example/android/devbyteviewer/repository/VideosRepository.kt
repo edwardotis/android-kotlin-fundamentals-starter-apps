@@ -73,8 +73,8 @@ class VideosRepository(private val database: VideosDatabase, private val viewMod
 //    val videos = LivePagedListBuilder(dsFactoryDevByteVideos, DATABASE_PAGE_SIZE).build()
 
     companion object {
-        private const val NETWORK_PAGE_SIZE = 50
-        private const val DATABASE_PAGE_SIZE = 20
+        const val NETWORK_PAGE_SIZE = 5
+        private const val DATABASE_PAGE_SIZE = 10
     }
 
 }

@@ -195,7 +195,8 @@ class DevByteAdapter(val callback: VideoClick) :
          */
 //        private val diffCallback = object : DiffUtil.ItemCallback<DevByteVideo>() {
         override fun areItemsTheSame(oldItem: DevByteVideo, newItem: DevByteVideo): Boolean =
-                oldItem.url == newItem.url
+//                oldItem.url == newItem.url
+                oldItem.id == newItem.id
 
         /**
          * Note that in kotlin, == checking on data classes compares all contents, but in Java,
