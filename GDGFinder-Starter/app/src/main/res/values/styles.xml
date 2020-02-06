@@ -26,4 +26,20 @@
         <item name="fontFamily">@font/lobster_two</item>
     </style>
 
+<!--    custom styles. NOTE If you want these to override from the theme, you have to set them as
+                        android:textAppearance="@style/TextAppearance.Title"
+
+        If you want the style to *replace* all the parent theme on the element, then set it with:
+                        style="@style/TextAppearance.Title"
+
+-->
+    <style name="TextAppearance.Title" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="TextAppearance.Subtitle" parent="TextAppearance.Title" >
+        <item name="android:textSize">18sp</item>
+    </style>
+
 </resources>
